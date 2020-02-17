@@ -14,7 +14,33 @@ const config={
   firebase.initializeApp(config);
 export const auth=firebase.auth();
 export const firestore=firebase.firestore();
-
+export const createUserProfileDocument= async (userAuth,additionalData)=>{
+  if(!userAuth) return;
+  // console.log(firestore.doc('users/fefseg'))const snapShop=await userRef.get();
+  // collection/document ref gives info about collection/document and 'CRUD'opearations can be performed 
+  // Use snapShop to know whether that piece of data exists in database 
+  // get the user id from database if it's not there store it
+  const userRef=firestore.doc(`users/${userAuth.uid}`);
+  const snapShot=await userRef.get();
+  if(!snapShot.exists){
+    const {displayName,email}=userAuth;
+    const createdAt= new Date();
+    try{
+      await userRef.set(
+        {
+          displayName,
+          email,
+          createdAt,
+          ...additionalData
+        }
+      );
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+  return userRef;
+}
 const provider=new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
 export const signInWithGoogle=()=>auth.signInWithPopup(provider);
