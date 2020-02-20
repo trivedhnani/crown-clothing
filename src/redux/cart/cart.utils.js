@@ -13,3 +13,14 @@ export const addItemToCart=(cartItems,cartItemToAdd)=>{
             return [...cartItems,{...cartItemToAdd,quantity:1}];
         }
 };
+export const removeItemFromCart=(cartItems,cartItem)=>{
+    const exisitingItem=cartItems.find(item=>cartItem.id===item.id);
+        if(exisitingItem.quantity===1){
+            return cartItems.filter(item=>cartItem.id!==item.id);
+        }
+        else{
+            return cartItems.map(item=>(
+                item.id===cartItem.id?{...item,quantity:item.quantity-1}:item
+            ))
+        }
+};
