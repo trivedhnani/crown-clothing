@@ -41,6 +41,32 @@ export const createUserProfileDocument= async (userAuth,additionalData)=>{
   }
   return userRef;
 }
+export  const addCollectionAndDocuments=async (collectionKey,DocumentsTOAdd)=>{
+  const collectionRef=firestore.collection(collectionKey);
+  // console.log(collectionRef);
+  const batch= firestore.batch();
+  DocumentsTOAdd.forEach(document=>{
+    const newDocRef= collectionRef.doc();//Create a document with a unique ID
+    batch.set(newDocRef,document);
+  });
+  return await batch.commit();
+}
+export const convertCollectionssnapShotToMap=(collections)=>{
+  const transformedCollection=collections.docs.map(doc=>{
+    const {title,items}=doc.data();
+    return {
+      rountName:encodeURI(title.toLowerCase()),
+      id:doc.id,
+      title,
+      items
+    }
+});
+ return (transformedCollection.reduce((accumulator,collection)=>{
+    accumulator[collection.title.toLowerCase()]=collection;
+    return accumulator;
+  },{}));
+  // console.log(transformedCollection);
+}
 const provider=new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
 export const signInWithGoogle=()=>auth.signInWithPopup(provider);

@@ -4,9 +4,7 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 import {selectCollection} from '../../redux/shop/shop.selector';
 import {connect} from 'react-redux';
 const CollectionPage=({match,collection})=>{
-    console.log(match);
     const{title,items}=collection;
-    console.log(collection);
     return(
     <div className='collection-page'>
         <h2 className='title'>{title}</h2>
