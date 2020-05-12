@@ -47,7 +47,6 @@ export function* isUserAuthentiacted() {
     const userAuth = yield getCurrentUser();
     if (!userAuth) return;
     const userRef = yield call(createUserProfileDocument, userAuth);
-    console.log(userAuth);
     const userSnapshot = yield userRef.get();
     yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data }));
   } catch (error) {
